@@ -1,14 +1,20 @@
 package com.techoffice.model;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NoobChain {
 	
 	private ArrayList<Block> blockchain = null; 
-
+	private Map<String, TransactionOutput> unspentTransactionOutputMap = null;
+	
+	
 	public NoobChain(){
 		blockchain = new ArrayList<Block>(); 
+		unspentTransactionOutputMap = new HashMap<String, TransactionOutput>();
 	}
 	
 	public void add(Block block){
@@ -29,4 +35,24 @@ public class NoobChain {
 	public List<Block> getBlockchain(){
 		return this.blockchain;
 	}
+	
+	public TransactionOutput getUnspentTransactionOutput(String transactionOutputId){
+		TransactionOutput output = this.unspentTransactionOutputMap.get(transactionOutputId);
+		return output;
+	}
+	
+	public void putUnspentTransactionOutput(String transactionOutputId, TransactionOutput output){
+		this.unspentTransactionOutputMap.put(transactionOutputId, output);
+	}
+	
+	public void removeUnspentTransactionOutput(String transactionOutputId){
+		this.unspentTransactionOutputMap.remove(transactionOutputId);
+	}
+	
+	public Map<String, TransactionOutput> getUnspentTransactionOutputMap(){
+		return this.unspentTransactionOutputMap;
+	}
+	
+
+	
 }

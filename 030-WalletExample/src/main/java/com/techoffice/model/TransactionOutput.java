@@ -6,10 +6,10 @@ import com.techoffice.util.StringUtil;
 
 public class TransactionOutput {
 
-	public String id;
-	public PublicKey reciepient;
-	public float value;
-	public String parentTransactionId; 
+	private String id;
+	private PublicKey reciepient;
+	private float value;
+	private String parentTransactionId; 
 	
 	public TransactionOutput(PublicKey reciepient, float value, String parentTransactionId) {
 		this.reciepient = reciepient;
@@ -38,6 +38,5 @@ public class TransactionOutput {
 		return parentTransactionId;
 	}
 
-	
-	
+
 }
