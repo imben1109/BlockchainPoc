@@ -10,12 +10,25 @@ public class Block {
 	private String previousHash;
 	private String data; 
 	private long timeStamp; 
+	private int nonce = 0;
+	public static int difficulty = 5;
 	
 	public Block(String data,String previousHash ) {
 		this.data = data;
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
-		this.hash = BlockHelper.calcHash(this.previousHash, this.timeStamp, this.data);
+		this.mineBlock();
+	}
+	
+	public void mineBlock(){
+		String target = new String(new char[difficulty]).replace('\0', '0'); 
+		String hash = BlockHelper.calcHash(this.previousHash, this.timeStamp, Integer.toString(nonce) + this.data);
+		while(!hash.substring( 0, difficulty).equals(target)) {
+			nonce ++;
+			hash = BlockHelper.calcHash(this.previousHash, this.timeStamp, Integer.toString(nonce) + this.data);
+		}
+		this.hash = hash;
+		System.out.println("Block Mined!!! : " + hash);
 	}
 
 	public String getHash() {

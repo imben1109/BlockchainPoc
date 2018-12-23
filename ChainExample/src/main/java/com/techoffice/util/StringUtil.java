@@ -33,7 +33,7 @@ public class StringUtil {
 	 * @param obj
 	 * @return JSON String
 	 */
-	public String getJson(Object obj){
+	public static String getJson(Object obj){
 		Gson gson = new Gson();
 		String json = gson.toJson(obj);
 		return json;
