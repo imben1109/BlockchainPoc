@@ -56,8 +56,19 @@ public class Wallet {
 	
 	public Transaction sendFund(PublicKey recipient, float value){
 		List<TransactionInput> inputs = new ArrayList<TransactionInput>();
-//		float total = 0;
-		Transaction newTransaction = new Transaction(recipient, publicKey , value, inputs);
+		float total = 0;
+		for (Map.Entry<String, TransactionOutput> item: this.noobChain.getUnspentTransactionOutputMap().entrySet()){
+			TransactionOutput unspentTransactionOutput = item.getValue();
+			total += unspentTransactionOutput.getValue();
+			inputs.add(new TransactionInput(unspentTransactionOutput.getId()));
+			if(total > value) break;
+		}
+		Transaction newTransaction = new Transaction(this.publicKey, recipient , value, inputs);
+		newTransaction.setNoobChain(this.noobChain);
+		newTransaction.generateSignature(this.privateKey);
+		for(TransactionInput input: inputs){
+			this.unspentTransactionOutputMap.remove(input.getTransactionOutputId());
+		}
 		return newTransaction;
 	}
 }

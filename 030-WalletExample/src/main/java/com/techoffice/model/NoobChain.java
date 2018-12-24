@@ -10,13 +10,13 @@ public class NoobChain {
 	private ArrayList<Block> blockchain = null; 
 	private Map<String, TransactionOutput> unspentTransactionOutputMap = null;
 	
-	
 	public NoobChain(){
 		blockchain = new ArrayList<Block>(); 
 		unspentTransactionOutputMap = new HashMap<String, TransactionOutput>();
 	}
 	
 	public void add(Block block){
+		block.mineBlock();
 		this.blockchain.add(block);
 	}
 	

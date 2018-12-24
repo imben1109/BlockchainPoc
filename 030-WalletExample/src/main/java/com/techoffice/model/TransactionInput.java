@@ -14,7 +14,7 @@ public class TransactionInput {
 	}
 	
 	public void setTransactionOutput(TransactionOutput transactionOutput){
-		this.setTransactionOutput(transactionOutput);
+		this.transactionOutput = transactionOutput;
 	}
 	
 	public TransactionOutput getTransactionOutput(){

@@ -5,9 +5,12 @@ import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 import com.google.gson.Gson;
+import com.techoffice.model.Transaction;
 
 public class StringUtil {
 
@@ -89,6 +92,29 @@ public class StringUtil {
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public static String getMerkleRoot(List<Transaction> transactionList){
+		int count = transactionList.size();
+		
+		List<String> previousTreeLayer = new ArrayList<String>();
+		for(Transaction transaction : transactionList) {
+			previousTreeLayer.add(transaction.getTransactionId());
+		}
+		List<String> treeLayer = previousTreeLayer;
+		
+		while(count > 1) {
+			treeLayer = new ArrayList<String>();
+			for(int i=1; i < previousTreeLayer.size(); i+=2) {
+				treeLayer.add(StringUtil.getDigestMessage(previousTreeLayer.get(i-1) + previousTreeLayer.get(i)));
+			}
+			count = treeLayer.size();
+			previousTreeLayer = treeLayer;
+		}
+		
+		String merkleRoot = (treeLayer.size() == 1) ? treeLayer.get(0) : "";
+		return merkleRoot;
+
 	}
 
 }

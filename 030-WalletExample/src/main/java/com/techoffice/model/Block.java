@@ -8,26 +8,26 @@ import com.techoffice.util.BlockHelper;
 
 public class Block {
 	
+	private String merkleRoot;
 	private String hash;
 	private String previousHash;
-	private String data; 
 	private long timeStamp; 
 	private int nonce = 0;
 	private List<Transaction> transactionList = new ArrayList<Transaction>();
-	public static int difficulty = 5;
+	public static int difficulty = 0;
 	
-	public Block(String data,String previousHash ) {
-		this.data = data;
+	public Block(String previousHash ) {
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
+		this.hash = BlockHelper.calcHash(this.previousHash, this.timeStamp, nonce, merkleRoot);
 	}
 	
 	public void mineBlock(){
 		String target = new String(new char[difficulty]).replace('\0', '0'); 
-		String hash = BlockHelper.calcHash(this.previousHash, this.timeStamp, Integer.toString(nonce) + this.data);
+		String hash = BlockHelper.calcHash(this.previousHash, this.timeStamp, nonce, merkleRoot);
 		while(!hash.substring( 0, difficulty).equals(target)) {
 			nonce ++;
-			hash = BlockHelper.calcHash(this.previousHash, this.timeStamp, Integer.toString(nonce) + this.data);
+			hash = BlockHelper.calcHash(this.previousHash, this.timeStamp, nonce, merkleRoot );
 		}
 		this.hash = hash;
 		System.out.println("Block Mined!!! : " + hash);
@@ -50,10 +50,6 @@ public class Block {
 
 	public String getPreviousHash() {
 		return previousHash;
-	}
-
-	public String getData() {
-		return data;
 	}
 
 	public long getTimeStamp() {

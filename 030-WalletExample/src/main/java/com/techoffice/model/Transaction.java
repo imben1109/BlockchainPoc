@@ -9,6 +9,7 @@ import com.techoffice.util.StringUtil;
 
 public class Transaction {
 
+	private String transactionId;
 	private PublicKey sender; 
 	private PublicKey reciepient; 
 	private float value;
@@ -24,6 +25,7 @@ public class Transaction {
 		this.reciepient = to;
 		this.value = value;
 		this.inputs = inputs;
+		this.transactionId = this.calcHash();
 	}
 	
 	public void setNoobChain(NoobChain noobChain){
@@ -48,17 +50,17 @@ public class Transaction {
 
 	public boolean process(){
 		if (!verifySignature()){
+			System.out.println("Transaction is not verified");
 			return false;
 		}
 		for (TransactionInput input: inputs){
-			String transactionOutputId = input.getTransactionOutput().getId();
+			String transactionOutputId = input.getTransactionOutputId();
 			TransactionOutput unspentTransactionOutput = this.noobChain.getUnspentTransactionOutput(transactionOutputId);
 			input.setTransactionOutput(unspentTransactionOutput);
 		}
 		float leftOver = this.getInputsValue() - value;
-		String transactionId = this.calcHash();
-		outputs.add(new TransactionOutput( this.reciepient, value,transactionId)); 
-		outputs.add(new TransactionOutput( this.sender, leftOver,transactionId)); 
+		outputs.add(new TransactionOutput( this.reciepient, value, this.transactionId)); 
+		outputs.add(new TransactionOutput( this.sender, leftOver, this.transactionId)); 
 		for (TransactionOutput output: outputs){
 			this.noobChain.putUnspentTransactionOutput(output.getId(), output);
 		}
@@ -90,4 +92,7 @@ public class Transaction {
 		return total;
 	}
 	
+	public String getTransactionId(){
+		return this.transactionId;
+	}
 }
