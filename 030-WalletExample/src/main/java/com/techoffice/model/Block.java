@@ -1,23 +1,25 @@
 package com.techoffice.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.techoffice.util.BlockHelper;
 
 public class Block {
 	
-	public String hash;
+	private String hash;
 	private String previousHash;
 	private String data; 
 	private long timeStamp; 
 	private int nonce = 0;
+	private List<Transaction> transactionList = new ArrayList<Transaction>();
 	public static int difficulty = 5;
 	
 	public Block(String data,String previousHash ) {
 		this.data = data;
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
-		this.mineBlock();
 	}
 	
 	public void mineBlock(){
@@ -29,6 +31,17 @@ public class Block {
 		}
 		this.hash = hash;
 		System.out.println("Block Mined!!! : " + hash);
+	}
+	
+	public boolean addTransaction(Transaction transaction){
+		this.transactionList.add(transaction);
+		if (!"0".equals(this.previousHash)){
+			boolean processResult = transaction.process();
+			if (!processResult){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public String getHash() {
