@@ -3,6 +3,7 @@ package com.techoffice.model;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.techoffice.util.StringUtil;
@@ -14,7 +15,7 @@ public class Transaction {
 	private PublicKey reciepient; 
 	private float value;
 	private byte[] signature; 
-	private int sequence = 0;
+	private long timeStamp; 
 	private NoobChain noobChain = null;
 	
 	private List<TransactionInput> inputs = new ArrayList<TransactionInput>();
@@ -25,6 +26,7 @@ public class Transaction {
 		this.reciepient = to;
 		this.value = value;
 		this.inputs = inputs;
+		this.timeStamp = new Date().getTime();
 		this.transactionId = this.calcHash();
 	}
 	
@@ -44,8 +46,12 @@ public class Transaction {
 	
 	// for generating id 
 	private String calcHash(){
-		sequence++;
-		return StringUtil.getDigestMessage(StringUtil.getStringFromKey(sender)+StringUtil.getStringFromKey(reciepient)+Float.toString(value)+sequence);
+		return StringUtil.getDigestMessage(
+				StringUtil.getStringFromKey(sender)+
+				StringUtil.getStringFromKey(reciepient)+
+				Float.toString(value)+
+				Long.toString(timeStamp)
+			);
 	} 
 
 	public boolean process(){
